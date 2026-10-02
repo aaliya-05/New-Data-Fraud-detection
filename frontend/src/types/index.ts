@@ -24,6 +24,17 @@ export interface KpiResponse {
   block_count: number;
   review_count: number;
   allow_count: number;
+  total_records: number;
+}
+
+export interface CalendarDateInfo {
+  date: string;
+  record_count: number;
+}
+
+export interface CalendarDatesResponse {
+  dates: CalendarDateInfo[];
+  total_records: number;
 }
 
 export interface DailyPoint {
@@ -216,4 +227,23 @@ export interface WsEvent {
 export interface DateRange {
   dateFrom: string | null;
   dateTo: string | null;
+}
+
+// ---------------------------------------------------------------------------
+// Demask -- subscriber ID recovery (mapping / decryption)
+// ---------------------------------------------------------------------------
+
+export type DemaskMethod = 'mapping' | 'encryption';
+
+export interface EncryptionMethodsResponse {
+  methods: string[];
+  default: string | null;
+  configured: boolean;
+}
+
+export interface ProcessingStats {
+  total: number;
+  processed: number;
+  unprocessed: number;
+  errors: number;
 }

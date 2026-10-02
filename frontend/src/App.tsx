@@ -1,12 +1,15 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import MainLayout from '@/layouts/MainLayout';
 import { ExecutiveSummaryPage } from '@/pages/ExecutiveSummaryPage';
 import { SubscribersPage } from '@/pages/SubscribersPage';
 import { RiskAnalyticsPage } from '@/pages/RiskAnalyticsPage';
 import { SystemHealthPage } from '@/pages/SystemHealthPage';
+import { DemaskPage } from '@/pages/DemaskPage';
 
 const theme = createTheme({
   palette: {
@@ -28,18 +31,21 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" element={<MainLayout />}>
-              <Route index element={<ExecutiveSummaryPage />} />
-              <Route path="subscribers" element={<SubscribersPage />} />
-              <Route path="risk" element={<RiskAnalyticsPage />} />
-              <Route path="health" element={<SystemHealthPage />} />
-            </Route>
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
-        </BrowserRouter>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/dashboard" element={<MainLayout />}>
+                <Route index element={<ExecutiveSummaryPage />} />
+                <Route path="subscribers" element={<SubscribersPage />} />
+                <Route path="risk" element={<RiskAnalyticsPage />} />
+                <Route path="health" element={<SystemHealthPage />} />
+                <Route path="demask" element={<DemaskPage />} />
+              </Route>
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </BrowserRouter>
+        </LocalizationProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

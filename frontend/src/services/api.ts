@@ -9,6 +9,7 @@
 import axios from 'axios';
 import type {
   AnalyticsWindowsResponse,
+  CalendarDatesResponse,
   DailyPoint,
   KpiResponse,
   PackageStatsResponse,
@@ -29,9 +30,25 @@ const api = axios.create({
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    let detail = error.response?.data?.detail;
+
+    // Blob-response endpoints (e.g. Demask CSV downloads) carry JSON error
+    // bodies as a Blob instead of parsed JSON -- read it before falling back.
+    if (detail === undefined && error.response?.data instanceof Blob) {
+      try {
+        const parsed = JSON.parse(await error.response.data.text());
+        detail = parsed.detail;
+      } catch {
+        // not JSON -- ignore and fall through to the generic message below
+      }
+    }
+
     const message =
-      error.response?.data?.detail || error.response?.data?.message || error.message || 'Unknown error';
+      (typeof detail === 'string' ? detail : detail?.message) ||
+      error.response?.data?.message ||
+      error.message ||
+      'Unknown error';
     return Promise.reject(new Error(message));
   }
 );
@@ -90,6 +107,11 @@ export const fetchRuleStatistics = async (
 
 export const fetchSystemHealth = async (): Promise<SystemHealthResponse> => {
   const { data } = await api.get('/api/system-health');
+  return data;
+};
+
+export const fetchCalendarDates = async (): Promise<CalendarDatesResponse> => {
+  const { data } = await api.get('/api/analytics/calendar-dates');
   return data;
 };
 
