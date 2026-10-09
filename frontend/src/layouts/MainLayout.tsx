@@ -21,8 +21,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '@/auth/AuthContext';
 import logoMark from '@/assets/logo-mark.png';
-import { useWebSocket } from '@/hooks/useWebSocket';
-import { AlertBanner } from '@/components/AlertBanner';
 
 const DRAWER_WIDTH = 220;
 
@@ -35,12 +33,21 @@ const NAV_ITEMS = [
 ];
 
 export default function MainLayout() {
-  const { isConnected } = useWebSocket();
   const { user, logout } = useAuth();
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar
+        position="fixed"
+        elevation={0}
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer + 1,
+          bgcolor: 'background.paper',
+          color: 'primary.dark',
+          borderBottom: '3px solid',
+          borderColor: 'secondary.main',
+        }}
+      >
         <Toolbar sx={{ gap: 2 }}>
           <Box
             component="img"
@@ -51,12 +58,6 @@ export default function MainLayout() {
           <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700 }}>
             FraudVision AI
           </Typography>
-          <Chip
-            label={isConnected ? 'Live' : 'Reconnecting…'}
-            color={isConnected ? 'success' : 'default'}
-            size="small"
-            variant="outlined"
-          />
           <Chip icon={<PersonIcon />} label={user} size="small" variant="outlined" />
           <Button color="inherit" size="small" startIcon={<LogoutIcon />} onClick={logout}>
             Sign out
@@ -80,7 +81,7 @@ export default function MainLayout() {
               component={NavLink}
               to={item.to}
               end={item.end}
-              sx={{ '&.active': { bgcolor: 'action.selected' } }}
+              sx={{ '&.active': { bgcolor: 'rgba(0,114,188,0.10)', color: 'primary.dark', borderLeft: '4px solid', borderColor: 'secondary.main' } }}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.label} />
@@ -91,7 +92,6 @@ export default function MainLayout() {
 
       <Box component="main" sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${DRAWER_WIDTH}px)` }}>
         <Toolbar />
-        <AlertBanner />
         <Outlet />
       </Box>
     </Box>

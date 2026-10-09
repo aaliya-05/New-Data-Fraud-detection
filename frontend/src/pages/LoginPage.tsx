@@ -16,7 +16,7 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import RadarIcon from '@mui/icons-material/Radar';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import BoltIcon from '@mui/icons-material/Bolt';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import { useAuth } from '@/auth/AuthContext';
@@ -36,9 +36,9 @@ const rise = keyframes`
 `;
 
 const FEATURES = [
-  { icon: <RadarIcon />, title: 'Real-time detection', text: 'Live fraud alerts streamed as subscriber sessions are scored.' },
-  { icon: <PsychologyIcon />, title: 'Ensemble AI scoring', text: 'Isolation Forest plus calibrated rules, explained per subscriber.' },
-  { icon: <BoltIcon />, title: 'Act in seconds', text: 'Triage high-risk accounts and export evidence in a click.' },
+  { icon: <AssessmentIcon />, title: 'Daily fraud analysis', text: 'Every subscriber usage record is scored and ranked each day.' },
+  { icon: <PsychologyIcon />, title: 'Smart risk scoring', text: 'Every subscriber gets a clear risk score, with the reasons behind it.' },
+  { icon: <BoltIcon />, title: 'Act on what matters', text: 'Triage high-risk accounts and export evidence in a click.' },
 ];
 
 function LogoCard({ width }: { width: number }) {
@@ -50,7 +50,7 @@ function LogoCard({ width }: { width: number }) {
           position: 'absolute',
           inset: '-18% -22% -14% -22%',
           background: [
-            'radial-gradient(ellipse 46% 52% at 32% 44%, rgba(59,130,246,0.55) 0%, rgba(59,130,246,0) 100%)',
+            'radial-gradient(ellipse 46% 52% at 32% 44%, rgba(61,155,219,0.55) 0%, rgba(61,155,219,0) 100%)',
             'radial-gradient(ellipse 30% 40% at 76% 48%, rgba(245,166,66,0.38) 0%, rgba(245,166,66,0) 100%)',
           ].join(','),
           filter: 'blur(26px)',
@@ -107,13 +107,13 @@ export function LoginPage() {
           justifyContent: 'space-between',
           p: { md: 6, lg: 8 },
           overflow: 'hidden',
-          background: 'linear-gradient(160deg, #0B1B3F 0%, #0A1128 55%, #160B33 100%)',
+          background: 'linear-gradient(160deg, #003B73 0%, #0072BC 62%, #3A9A55 118%)',
           borderRight: '1px solid rgba(148, 163, 184, 0.12)',
         }}
       >
         {/* glowing orbs */}
-        <Box sx={{ position: 'absolute', top: -120, left: -100, width: 420, height: 420, borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.55), transparent 70%)', filter: 'blur(20px)', animation: `${float} 14s ease-in-out infinite` }} />
-        <Box sx={{ position: 'absolute', bottom: -140, right: -80, width: 460, height: 460, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.5), transparent 70%)', filter: 'blur(24px)', animation: `${float} 18s ease-in-out infinite reverse` }} />
+        <Box sx={{ position: 'absolute', top: -120, left: -100, width: 420, height: 420, borderRadius: '50%', background: 'radial-gradient(circle, rgba(61,155,219,0.6), transparent 70%)', filter: 'blur(20px)', animation: `${float} 14s ease-in-out infinite` }} />
+        <Box sx={{ position: 'absolute', bottom: -140, right: -80, width: 460, height: 460, borderRadius: '50%', background: 'radial-gradient(circle, rgba(108,179,63,0.5), transparent 70%)', filter: 'blur(24px)', animation: `${float} 18s ease-in-out infinite reverse` }} />
         {/* grid texture */}
         <Box
           sx={{
@@ -170,7 +170,7 @@ export function LoginPage() {
             See fraud before it costs you.
           </Typography>
           <Typography sx={{ color: 'rgba(226,232,240,0.72)', fontSize: 17, mb: 5 }}>
-            AI-driven risk intelligence for telecom subscribers, built for fraud analysts who need answers now.
+            AI-driven risk intelligence for telecom subscribers, built for fraud analysts who need clear answers.
           </Typography>
           <Stack spacing={2.5}>
             {FEATURES.map((f, i) => (
@@ -222,7 +222,7 @@ export function LoginPage() {
           alignItems: 'center',
           justifyContent: 'center',
           p: 3,
-          background: { xs: 'linear-gradient(160deg, #0B1B3F 0%, #060D1A 60%)', md: 'transparent' },
+          background: { xs: 'linear-gradient(160deg, #003B73 0%, #0072BC 100%)', md: 'transparent' },
         }}
       >
         <Box
@@ -234,10 +234,9 @@ export function LoginPage() {
             maxWidth: 420,
             p: { xs: 3, sm: 5 },
             borderRadius: 4,
-            bgcolor: 'rgba(15, 23, 42, 0.72)',
-            backdropFilter: 'blur(14px)',
-            border: '1px solid rgba(148, 163, 184, 0.16)',
-            boxShadow: '0 24px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(37,99,235,0.08)',
+            bgcolor: '#FFFFFF',
+            border: '1px solid #DCE5EF',
+            boxShadow: '0 24px 60px rgba(0,59,115,0.14)',
             animation: `${rise} 0.6s ease both`,
           }}
         >
@@ -312,9 +311,9 @@ export function LoginPage() {
                 fontWeight: 700,
                 textTransform: 'none',
                 fontSize: 16,
-                background: 'linear-gradient(90deg, #2563EB 0%, #7C3AED 100%)',
-                boxShadow: '0 10px 26px rgba(37,99,235,0.4)',
-                '&:hover': { background: 'linear-gradient(90deg, #1D4ED8 0%, #6D28D9 100%)' },
+                background: 'linear-gradient(90deg, #0072BC 0%, #4F9F2F 100%)',
+                boxShadow: '0 10px 26px rgba(0,114,188,0.35)',
+                '&:hover': { background: 'linear-gradient(90deg, #004F8C 0%, #3F8524 100%)' },
                 '&.Mui-disabled': { opacity: 0.5, color: '#fff' },
               }}
             >
