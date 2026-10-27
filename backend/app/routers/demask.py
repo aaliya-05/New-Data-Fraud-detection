@@ -1,6 +1,7 @@
 """
 Demask -- batch-convert masked subscriber IDs back to originals, via a
-CSV mapping lookup or a pluggable decryption provider.
+parquet mapping lookup or a pluggable decryption provider. The input file
+is a CSV, the mapping file is parquet, and results download as CSV.
 
 Ported and merged from chinthakadd7/Demask (backend/routers/mapping.py +
 backend/routers/encryption.py), mounted under this app's existing CORS
@@ -26,6 +27,22 @@ _encryption_provider = EncryptionProvider()
 _RESULT_HEADERS_EXPOSE = "X-Total-Records, X-Processed, X-Unprocessed, X-Errors"
 
 
+def _read_csv(data: bytes) -> pd.DataFrame:
+    # Read as strings to preserve phone numbers and prevent dtype mismatch.
+    return pd.read_csv(io.BytesIO(data), dtype=str)
+
+
+def _read_parquet(data: bytes) -> pd.DataFrame:
+    # Handled as strings too, so ID columns never mismatch on dtype.
+    return pd.read_parquet(io.BytesIO(data)).astype("string")
+
+
+def _csv_response(df: pd.DataFrame, filename: str, headers: dict) -> StreamingResponse:
+    csv_bytes = df.to_csv(index=False).encode("utf-8")
+    headers = {**headers, "Content-Disposition": f'attachment; filename="{filename}"'}
+    return StreamingResponse(iter([csv_bytes]), media_type="text/csv", headers=headers)
+
+
 @router.post("/mapping")
 async def process_mapping(
     input_file: UploadFile = File(...),
@@ -34,23 +51,23 @@ async def process_mapping(
     mapping_masked_col: str = Form("masked_subscriber_id"),
     mapping_original_col: str = Form("original_subscriber_id"),
 ):
-    # Read CSVs as strings to preserve phone numbers and prevent dtype mismatch
+    # Input is a CSV and the mapping is parquet; both are read as strings
     try:
-        input_df = pd.read_csv(io.BytesIO(await input_file.read()), dtype=str)
+        input_df = _read_csv(await input_file.read())
     except Exception as exc:
         raise HTTPException(400, f"Could not parse input CSV: {exc}") from exc
 
     try:
-        mapping_df = pd.read_csv(io.BytesIO(await mapping_file.read()), dtype=str)
+        mapping_df = _read_parquet(await mapping_file.read())
     except Exception as exc:
-        raise HTTPException(400, f"Could not parse mapping CSV: {exc}") from exc
+        raise HTTPException(400, f"Could not parse mapping parquet file: {exc}") from exc
 
     if input_id_col not in input_df.columns:
         raise HTTPException(422, f"Column '{input_id_col}' not found in input CSV. Available: {list(input_df.columns)}")
     if mapping_masked_col not in mapping_df.columns:
-        raise HTTPException(422, f"Column '{mapping_masked_col}' not found in mapping CSV. Available: {list(mapping_df.columns)}")
+        raise HTTPException(422, f"Column '{mapping_masked_col}' not found in mapping file. Available: {list(mapping_df.columns)}")
     if mapping_original_col not in mapping_df.columns:
-        raise HTTPException(422, f"Column '{mapping_original_col}' not found in mapping CSV. Available: {list(mapping_df.columns)}")
+        raise HTTPException(422, f"Column '{mapping_original_col}' not found in mapping file. Available: {list(mapping_df.columns)}")
 
     try:
         result = _mapping_provider.process(
@@ -63,19 +80,14 @@ async def process_mapping(
     except Exception as exc:
         raise HTTPException(500, f"Processing error: {exc}") from exc
 
-    buf = io.StringIO()
-    result.dataframe.to_csv(buf, index=False)
-    csv_bytes = buf.getvalue().encode("utf-8")
-
     headers = {
         "X-Total-Records": str(result.total_records),
         "X-Processed": str(result.processed),
         "X-Unprocessed": str(result.unprocessed),
         "X-Errors": str(result.errors),
-        "Content-Disposition": 'attachment; filename="updated_subscribers.csv"',
         "Access-Control-Expose-Headers": _RESULT_HEADERS_EXPOSE,
     }
-    return StreamingResponse(iter([csv_bytes]), media_type="text/csv", headers=headers)
+    return _csv_response(result.dataframe, "updated_subscribers.csv", headers)
 
 
 @router.get("/encryption/methods")
@@ -97,7 +109,7 @@ async def process_encryption(
     encryption_method: str = Form(...),
 ):
     try:
-        input_df = pd.read_csv(io.BytesIO(await input_file.read()), dtype=str)
+        input_df = _read_csv(await input_file.read())
     except Exception as exc:
         raise HTTPException(400, f"Could not parse input CSV: {exc}") from exc
 
@@ -125,16 +137,11 @@ async def process_encryption(
     except Exception as exc:
         raise HTTPException(500, f"Processing error: {exc}") from exc
 
-    buf = io.StringIO()
-    result.dataframe.to_csv(buf, index=False)
-    csv_bytes = buf.getvalue().encode("utf-8")
-
     headers = {
         "X-Total-Records": str(result.total_records),
         "X-Processed": str(result.processed),
         "X-Unprocessed": str(result.unprocessed),
         "X-Errors": str(result.errors),
-        "Content-Disposition": 'attachment; filename="decrypted_subscribers.csv"',
         "Access-Control-Expose-Headers": _RESULT_HEADERS_EXPOSE,
     }
-    return StreamingResponse(iter([csv_bytes]), media_type="text/csv", headers=headers)
+    return _csv_response(result.dataframe, "decrypted_subscribers.csv", headers)

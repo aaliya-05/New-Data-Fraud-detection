@@ -28,10 +28,12 @@ import type { DemaskMethod } from '@/types';
 function FilePickerField({
   label,
   helper,
+  accept,
   file,
   onChange,
 }: {
   label: string;
+  accept: string;
   helper: string;
   file: File | null;
   onChange: (file: File | null) => void;
@@ -50,7 +52,7 @@ function FilePickerField({
         {file ? file.name : 'Choose file'}
         <input
           type="file"
-          accept=".csv"
+          accept={accept}
           hidden
           onChange={(e) => onChange(e.target.files?.[0] ?? null)}
         />
@@ -159,7 +161,7 @@ export function DemaskPage() {
 
   const submitMapping = async () => {
     if (!inputFile || !mappingFile || !inputIdCol || !mappingMaskedCol || !mappingOriginalCol) {
-      setError('Please select both CSV files and fill in all column names.');
+      setError('Please select the input CSV and the mapping parquet file, and fill in all column names.');
       return;
     }
     setError(null);
@@ -204,7 +206,7 @@ export function DemaskPage() {
       <Box>
         <Typography variant="h6">Demask</Typography>
         <Typography variant="body2" color="text.secondary">
-          Batch-convert masked subscriber IDs back to originals, via a mapping CSV or a
+          Batch-convert masked subscriber IDs back to originals, via a parquet mapping file or a
           decryption provider.
         </Typography>
       </Box>
@@ -239,16 +241,18 @@ export function DemaskPage() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <FilePickerField
-                  label="Input CSV"
+                  label="Input file (CSV)"
                   helper="CSV file containing masked subscriber IDs"
+                  accept=".csv"
                   file={inputFile}
                   onChange={setInputFile}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <FilePickerField
-                  label="Mapping CSV"
-                  helper="CSV file with masked -> original ID mapping"
+                  label="Mapping file (parquet)"
+                  helper="Parquet file with masked -> original ID mapping"
+                  accept=".parquet"
                   file={mappingFile}
                   onChange={setMappingFile}
                 />
@@ -283,7 +287,7 @@ export function DemaskPage() {
             </Grid>
             <Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>
               <Button variant="contained" onClick={submitMapping} disabled={progress !== null}>
-                Process CSV
+                Process file
               </Button>
             </Stack>
           </CardContent>
@@ -304,8 +308,9 @@ export function DemaskPage() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <FilePickerField
-                  label="Input CSV"
+                  label="Input file (CSV)"
                   helper="CSV file containing encrypted subscriber IDs"
+                  accept=".csv"
                   file={encInputFile}
                   onChange={setEncInputFile}
                 />
@@ -344,7 +349,7 @@ export function DemaskPage() {
                 onClick={submitEncryption}
                 disabled={progress !== null || encMethods.length === 0}
               >
-                Process CSV
+                Process file
               </Button>
             </Stack>
           </CardContent>
