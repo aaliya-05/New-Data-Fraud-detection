@@ -30,6 +30,7 @@ export interface KpiResponse {
 export interface CalendarDateInfo {
   date: string;
   record_count: number;
+  package_record_count: number;
 }
 
 export interface CalendarDatesResponse {
@@ -172,11 +173,23 @@ export interface PackageRiskResponse {
   daily: PackageRiskDay[];
 }
 
+export interface PackageUsagePoint {
+  session_date: string;
+  package_name: string;
+  sessions_per_day: number | null;
+  download_gb: number;
+  upload_gb: number;
+  total_usage_gb: number;
+  risk_score_0_100: number | null;
+  risk_level: string | null;
+}
+
 export interface SubscriberDetailPoint {
   session_date: string;
   total_input_gb: number | null;
   total_output_gb: number | null;
   total_duration_minutes?: number | null;
+  average_session_duration_minutes?: number | null;
   sessions_per_day?: number | null;
   offer_name?: string | null;
   package_risks?: PackageRiskPoint[];
@@ -202,6 +215,7 @@ export interface SubscriberDetail {
   offer_name: string | null;
   history_days: number;
   history: SubscriberDetailPoint[];
+  package_usage: PackageUsagePoint[];
   latest_decision: Decision | null;
   latest_final_score: number | null;
   triggered_rules_latest: string[];

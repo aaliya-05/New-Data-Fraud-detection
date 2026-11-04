@@ -1,0 +1,104 @@
+vas_subscription_id,addon_name,addon_description,validity_days
+P_BD_A_LOYALTY1,Local Data Bundle,30 GB,30
+P_VB_Q_OM_OT_30GB,Meet Lite One Time,30 GB,30
+P_VB_Q_OM_OT_100GB,Meet Max One Time,100 GB,30
+P_VB_Q_ED_OT_30GB,LMS Lite One Time,30 GB,30
+P_VB_Q_ED_OT_100GB,LMS Max One Time,100 GB,30
+P_VB_Q_ED_OT_150GB,"MeetUltra - Zoom,Teams,+",150 GB,30
+P_VB_U_Netflix,Entertainment Combo Pack,Unlimited,0
+P_VB_U_LCON_Re30D,PeoTV Go,Unlimited,0
+P_VB_Q_GAME_Re30D_25GB,Gamer Lite,25 GB,30
+P_VB_Q_GAME_Re30D_100GB,Gamer Premium,100 GB,30
+P_VB_Q_GAME_Re30D_150GB,Streamer Premium,150 GB,30
+P_VB_Q_YT_Re7D_15GB,YouTube (7 Days),15 GB,7
+P_VB_Q_MZ_Re7D_10GB,Messenger (7 Days),10 GB,7
+P_VB_Q_OM_Re30D_30GB,Meet Lite Recurrent,30 GB,30
+P_VB_Q_OM_Re30D_100GB,Meet Max Recurrent,100 GB,30
+P_VB_Q_ED_Re30D_30GB,LMS Lite Recurrent,30 GB,30
+P_VB_Q_ED_Re30D_100GB,LMS Max Recurrent,100 GB,30
+P_VB_U_Meet,Meet Unlimited,Unlimited,30
+ADDON 10,Daily 10GB,10 GB,1
+ADDON 25,Daily 25GB,25 GB,1
+P_VB_Q_ENT_OT_100GB,Enterprise Pack,100GB,30
+P_VB_Q_GAME_OT_100GB,Gamer Premium,100GB,30
+P_VB_Q_GAME_OT_25GB,Gamer Lite,25GB,30
+P_VB_Q_YT_OT_5GB,You Tube 5GB,5GB,30
+ADDON 5,Daily 5GB,5 GB,1
+P_VB_Q_MZ_OT_10GB,Messenger Promo 10GB,10 GB,30
+P_VB_Q_PROYT_OT_10GB,YouTube Promo 10GB,10 GB,30
+P_VB_Q_PROOM_OT_100GB,Meet Promo,100 GB,30
+P_VB_Q_PROYT_OT_25GB,YouTube 25GB,25 GB,30
+P_VB_Q_PROOM_OT_30GB,Meet Lite Promo 30GB,30 GB,30
+P_VB_Q_BONUS 100GB,BONUS Bundle,100 GB,30
+P_VB_Q_GAME_PROMO_25GB,Gamer Promo,25 GB,30
+P_BD_A_BONUS1,Bonus Offer 15 GB,15 GB,30
+P_BD_A_BONUS2,Bonus Offer 25 GB,25 GB,30
+P_VB_U_MESSENGER,Messenger Unlimited Free,Unlimited,10
+P_VB_Q_BONUS 25GB,Bonus Offer 25 GB,25 GB,30
+P_VB_Q_BONUS 20GB,Bonus Offer 20 GB,20 GB,30
+P_VB_Q_PROYT_R2T_100GB,You Tube 100GB Bonus,100 GB,30
+P_VB_Q_PROOM_R2T_100GB,Meet Max Bonus,100 GB,30
+P_VB_Q_MZ_OT_5GB,Messenger Promo 5GB,5 GB,30
+P_VB_Q_ENTEXP_OT_25GB_30D,Data Hamper CSW 2025,25 GB,30
+P_VB_Q_PRONF_100GB,Entertainment Combo 100GB,100 GB,30
+P_VB_Q_YT_ReM_25GB,You Tube 25 GB Offer,25 GB,30
+P_VB_Q_YOUTH_Re7D,Youth Add-on (7 Days),20 GB,7
+P_VB_U_ENTEXP_ReM,Entertainment Express,Unlimited,30
+P_VB_U_YT_ReM,Youtube Unlimited,Unlimited,30
+ADDON 40,Daily 40GB,40 GB,1
+ADDON 100,Daily 100GB,100 GB,1
+ADDON 200,Daily 200GB,200 GB,1
+P_VB_Q_BONUS 50GB,Bonus Offer 50GB,50GB,30
+P_VB_Q_ENTEXP,25GB Awurudu Free Add-On,25GB,7
+P_VB_Q_ML_ReM,MSME Meet Lite ,30GB,30
+P_VB_Q_MSG_ReM_40GB,MSME Messenger 40GB,40GB,30
+P_VB_Q_PROMO_YOUTH_OT_10GB,Youth Data Promo_10GB,10 GB,30
+P_VB_Q_PROMO_YOUTH_OT_20GB,Youth Data Promo_20GB,20 GB,30
+P_VB_Q_OM_PREPAID_30GB,Meet Lite Prepaid,30 GB,30
+P_VB_PRE_SMYT,SMYT Prepaid,25 GB,30
+P_VB_Q_ENT_REM_100GB,Enterprise Pack Recurrent,100 GB,30
+P_VB_U_PROYT_4HR,YouTube Perk 1,Unlimited,1
+P_VB_U_PROYT_12HR,YouTube Perk 2,Unlimited,1
+P_VB_U_PROYT_24HR,YouTube Perk 3,Unlimited,1
+P_VB_Q_ADDON 5_OT,Onetime 5GB AddOn,5 GB,1
+P_VB_Q_ADDON 10_OT,Onetime 10GB AddOn,10 GB,1
+P_VB_Q_ADDON 25_OT,Onetime 25GB AddOn,25 GB,1
+P_VB_Q_ADDON 40_OT,Onetime 40GB AddOn,40 GB,1
+P_VB_Q_ADDON 100_OT,Onetime 100GB AddOn,100 GB,1
+P_VB_Q_ADDON 200_OT,Onetime 200GB AddOn,200 GB,1
+P_VB_Q_RE_BONUS 10GB,Bonus 10GB,10GB,30
+P_VB_Q_PROMO_YOUTH_OT_50GB,Youth Data Promo_50GB,50 GB,30
+P_VB_Q_YOUTH_RE_25GB,Trio Youth add-on,25 GB,30
+P_VB_Q_UPLOAD_12GB,Upload 12GB,12 GB,30
+P_VB_Q_UPLOAD_40GB,Upload 40GB,40 GB,30
+P_VB_U_UPLOAD,Unlimited Upload,Unlimited,30
+P_VB_Q_PR_YOUTH_OT_50GB_14D,Seasonal Offer Youth 50GB,50 GB,14
+P_VB_Q_PR_YOUTH1_OT_25GB_7D,Valentine's Offer,25 GB,7
+P_VB_Q_ENTEXP_OT_25GB,Awurudu Data Hamper,25 GB,7
+P_VB_Q_PROMO_OT_100GB,Anytime Free 100GB,100GB,30
+P_VB_Q_PR_YOUTH_RE_30GB,Youth bundle 30GB,30GB,30
+P_VB_Q_RE_BONUS_1,Bonus Data 1,23GB,30
+P_VB_Q_RE_BONUS_2,Bonus Data 2,41GB,30
+P_VB_Q_ENTEXP_OT_100GB,Ent. Express Offer,100GB,30
+P_VB_Q_BONUS_10GB_RE,Bonus Data 10GB,10GB,30
+P_VB_Q_PROMO_YOUTH_RE_50GB,Youth Bundle 50GB,50 GB,30
+P_VB_Q_YT_RE_50GB,TouTube Bundle 50GB,50 GB,30
+P_VB_Q_BONUS 500GB,Bonus Data 500GB,500 GB,366
+P_VB_Q_RE_BONUS 25GB,Bonus 25GB,25GB,30
+P_VB_U_LTEPEO_Re30,LTE PEOTV Unlimited,Unlimited,30
+P_VB_Q_PR_YOUTH_OT_25GB_7D,Valentine's Free Offer,25 GB,7
+P_VB_Q_BONUS 2GB,Bonus Data 2GB,2 GB,366
+P_VB_Q_YOUTH_25GB,Social Media Bundle,25 GB,30
+P_VB_Q_YOUTH_100GB,Social Media Bundle,100 GB,30
+P_VB_Q_PR_YOUTH_RE_10GB,Youth Bonus 10GB,10GB,30
+Z_Happy_Day,New Year Promotion,Unlimited,1
+P_VB_Q_ENTEXP_RE_25GB,Bonus ENTXP 25GB,25GB,30
+P_VB_U_BONUS_30D,Unlimited_One Month,Unlimited,30
+P_VB_U_BONUS_60D,Unlimited_Two Months,Unlimited,60
+FLEXINET40,Flexi Net 40,40GB,7
+FLEXINET100,Flexi Net 100,100GB,30
+FLEXINET250,Flexi Net 250,250GB,30
+FLEXINET500,Flexi Net 500,500GB,30
+Unlimited_Day_Pass,Unlimited Day Pass,Unlimited,1
+Unlimited_3Day_Pass,Unlimited 3-Day Pass,Unlimited,3
+Unlimited_week_Pass,Unlimited Week Pass,Unlimited,7

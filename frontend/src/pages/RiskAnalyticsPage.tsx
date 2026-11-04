@@ -12,10 +12,13 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
+import { useState } from 'react';
 import ReactECharts from 'echarts-for-react';
+import { PackageName } from '@/components/PackageName';
 import { DateRangeFilter } from '@/components/DateRangeFilter';
 import { usePackageRisk, usePackageStats, useRuleStatistics } from '@/hooks/useDashboard';
 import { useDateRange } from '@/context/DateRangeContext';
+import { makeLabeler } from '@/utils/packageNames';
 
 export function RiskAnalyticsPage() {
   const { range, setRange } = useDateRange();
@@ -23,24 +26,41 @@ export function RiskAnalyticsPage() {
   const { data: packageStats } = usePackageStats();
   const { data: packageRisk } = usePackageRisk(range);
 
+  // Double-clicking a chart switches its package names between friendly names and raw codes.
+  const [rawPie, setRawPie] = useState(false);
+  const [rawRisk, setRawRisk] = useState(false);
+
+  const pieItems = (packageStats?.distribution ?? []).slice(0, 10);
+  const pieLabel = makeLabeler(pieItems.map((p) => p.name), rawPie);
   const packagePieOption = {
     tooltip: { trigger: 'item' },
     series: [
       {
         type: 'pie',
         radius: '65%',
-        data: (packageStats?.distribution ?? []).slice(0, 10).map((p) => ({ name: p.name, value: p.value })),
+        data: pieItems.map((p) => ({ name: pieLabel(p.name), value: p.value })),
       },
     ],
   };
 
   const topPackages = [...(packageRisk?.packages ?? [])].reverse();
+  const riskLabel = makeLabeler(topPackages.map((p) => p.package_name), rawRisk);
   const packageRiskOption = {
     color: ['#D32F2F'],
-    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: { type: 'shadow' },
+      formatter: (params: { name: string; marker: string; value: number }[]) =>
+        `${riskLabel(params[0].name)}<br/>${params[0].marker} Average risk score: <b>${params[0].value}</b>`,
+    },
     grid: { left: 190, right: 40, top: 20, bottom: 30 },
     xAxis: { type: 'value', name: 'Average risk score', min: 0, max: 100 },
-    yAxis: { type: 'category', data: topPackages.map((p) => p.package_name), axisLabel: { width: 170, overflow: 'truncate' } },
+    yAxis: {
+      type: 'category',
+      data: topPackages.map((p) => p.package_name),
+      axisLabel: { width: 170, overflow: 'truncate', formatter: riskLabel },
+      triggerEvent: true,
+    },
     series: [{ type: 'bar', data: topPackages.map((p) => p.average_risk) }],
   };
 
@@ -106,8 +126,16 @@ export function RiskAnalyticsPage() {
             <CardContent>
               <Typography variant="subtitle2" gutterBottom>
                 Top offers by subscriber count
+                <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                  (double-click to {rawPie ? 'show names' : 'show codes'})
+                </Typography>
               </Typography>
-              <ReactECharts option={packagePieOption} style={{ height: 320 }} notMerge />
+              <ReactECharts
+                option={packagePieOption}
+                style={{ height: 320 }}
+                notMerge
+                onEvents={{ dblclick: () => setRawPie((r) => !r) }}
+              />
             </CardContent>
           </Card>
         </Grid>
@@ -134,6 +162,9 @@ export function RiskAnalyticsPage() {
             <CardContent>
               <Typography variant="subtitle2" gutterBottom>
                 Package risk
+                <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                  (double-click a package name or the chart to switch between name and code)
+                </Typography>
               </Typography>
               <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
                 Each package gets its own risk score. Showing the 15 packages with the highest average risk in the
@@ -141,7 +172,12 @@ export function RiskAnalyticsPage() {
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                  <ReactECharts option={packageRiskOption} style={{ height: 420 }} notMerge />
+                  <ReactECharts
+                    option={packageRiskOption}
+                    style={{ height: 420 }}
+                    notMerge
+                    onEvents={{ dblclick: () => setRawRisk((r) => !r) }}
+                  />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 420 }}>
@@ -157,7 +193,9 @@ export function RiskAnalyticsPage() {
                       <TableBody>
                         {packageRisk.packages.map((p) => (
                           <TableRow key={p.package_name}>
-                            <TableCell>{p.package_name}</TableCell>
+                            <TableCell>
+                              <PackageName code={p.package_name} />
+                            </TableCell>
                             <TableCell align="right">{p.average_risk.toFixed(1)}</TableCell>
                             <TableCell align="right" sx={{ color: p.high_count > 0 ? 'error.main' : undefined, fontWeight: p.high_count > 0 ? 600 : undefined }}>
                               {p.high_count.toLocaleString()}

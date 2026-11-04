@@ -1,0 +1,517 @@
+{
+  "P_BD_A_LOYALTY1": {
+    "name": "Local Data Bundle",
+    "description": "30 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_OM_OT_30GB": {
+    "name": "Meet Lite One Time",
+    "description": "30 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_OM_OT_100GB": {
+    "name": "Meet Max One Time",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_ED_OT_30GB": {
+    "name": "LMS Lite One Time",
+    "description": "30 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_ED_OT_100GB": {
+    "name": "LMS Max One Time",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_ED_OT_150GB": {
+    "name": "MeetUltra - Zoom,Teams,+",
+    "description": "150 GB",
+    "validityDays": 30
+  },
+  "P_VB_U_Netflix": {
+    "name": "Entertainment Combo Pack",
+    "description": "Unlimited",
+    "validityDays": 0
+  },
+  "P_VB_U_LCON_Re30D": {
+    "name": "PeoTV Go",
+    "description": "Unlimited",
+    "validityDays": 0
+  },
+  "P_VB_Q_GAME_Re30D_25GB": {
+    "name": "Gamer Lite",
+    "description": "25 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_GAME_Re30D_100GB": {
+    "name": "Gamer Premium",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_GAME_Re30D_150GB": {
+    "name": "Streamer Premium",
+    "description": "150 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_YT_Re7D_15GB": {
+    "name": "YouTube (7 Days)",
+    "description": "15 GB",
+    "validityDays": 7
+  },
+  "P_VB_Q_MZ_Re7D_10GB": {
+    "name": "Messenger (7 Days)",
+    "description": "10 GB",
+    "validityDays": 7
+  },
+  "P_VB_Q_OM_Re30D_30GB": {
+    "name": "Meet Lite Recurrent",
+    "description": "30 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_OM_Re30D_100GB": {
+    "name": "Meet Max Recurrent",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_ED_Re30D_30GB": {
+    "name": "LMS Lite Recurrent",
+    "description": "30 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_ED_Re30D_100GB": {
+    "name": "LMS Max Recurrent",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_U_Meet": {
+    "name": "Meet Unlimited",
+    "description": "Unlimited",
+    "validityDays": 30
+  },
+  "ADDON 10": {
+    "name": "Daily 10GB",
+    "description": "10 GB",
+    "validityDays": 1
+  },
+  "ADDON 25": {
+    "name": "Daily 25GB",
+    "description": "25 GB",
+    "validityDays": 1
+  },
+  "P_VB_Q_ENT_OT_100GB": {
+    "name": "Enterprise Pack",
+    "description": "100GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_GAME_OT_100GB": {
+    "name": "Gamer Premium",
+    "description": "100GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_GAME_OT_25GB": {
+    "name": "Gamer Lite",
+    "description": "25GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_YT_OT_5GB": {
+    "name": "You Tube 5GB",
+    "description": "5GB",
+    "validityDays": 30
+  },
+  "ADDON 5": {
+    "name": "Daily 5GB",
+    "description": "5 GB",
+    "validityDays": 1
+  },
+  "P_VB_Q_MZ_OT_10GB": {
+    "name": "Messenger Promo 10GB",
+    "description": "10 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PROYT_OT_10GB": {
+    "name": "YouTube Promo 10GB",
+    "description": "10 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PROOM_OT_100GB": {
+    "name": "Meet Promo",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PROYT_OT_25GB": {
+    "name": "YouTube 25GB",
+    "description": "25 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PROOM_OT_30GB": {
+    "name": "Meet Lite Promo 30GB",
+    "description": "30 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_BONUS 100GB": {
+    "name": "BONUS Bundle",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_GAME_PROMO_25GB": {
+    "name": "Gamer Promo",
+    "description": "25 GB",
+    "validityDays": 30
+  },
+  "P_BD_A_BONUS1": {
+    "name": "Bonus Offer 15 GB",
+    "description": "15 GB",
+    "validityDays": 30
+  },
+  "P_BD_A_BONUS2": {
+    "name": "Bonus Offer 25 GB",
+    "description": "25 GB",
+    "validityDays": 30
+  },
+  "P_VB_U_MESSENGER": {
+    "name": "Messenger Unlimited Free",
+    "description": "Unlimited",
+    "validityDays": 10
+  },
+  "P_VB_Q_BONUS 25GB": {
+    "name": "Bonus Offer 25 GB",
+    "description": "25 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_BONUS 20GB": {
+    "name": "Bonus Offer 20 GB",
+    "description": "20 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PROYT_R2T_100GB": {
+    "name": "You Tube 100GB Bonus",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PROOM_R2T_100GB": {
+    "name": "Meet Max Bonus",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_MZ_OT_5GB": {
+    "name": "Messenger Promo 5GB",
+    "description": "5 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_ENTEXP_OT_25GB_30D": {
+    "name": "Data Hamper CSW 2025",
+    "description": "25 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PRONF_100GB": {
+    "name": "Entertainment Combo 100GB",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_YT_ReM_25GB": {
+    "name": "You Tube 25 GB Offer",
+    "description": "25 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_YOUTH_Re7D": {
+    "name": "Youth Add-on (7 Days)",
+    "description": "20 GB",
+    "validityDays": 7
+  },
+  "P_VB_U_ENTEXP_ReM": {
+    "name": "Entertainment Express",
+    "description": "Unlimited",
+    "validityDays": 30
+  },
+  "P_VB_U_YT_ReM": {
+    "name": "Youtube Unlimited",
+    "description": "Unlimited",
+    "validityDays": 30
+  },
+  "ADDON 40": {
+    "name": "Daily 40GB",
+    "description": "40 GB",
+    "validityDays": 1
+  },
+  "ADDON 100": {
+    "name": "Daily 100GB",
+    "description": "100 GB",
+    "validityDays": 1
+  },
+  "ADDON 200": {
+    "name": "Daily 200GB",
+    "description": "200 GB",
+    "validityDays": 1
+  },
+  "P_VB_Q_BONUS 50GB": {
+    "name": "Bonus Offer 50GB",
+    "description": "50GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_ENTEXP": {
+    "name": "25GB Awurudu Free Add-On",
+    "description": "25GB",
+    "validityDays": 7
+  },
+  "P_VB_Q_ML_ReM": {
+    "name": "MSME Meet Lite",
+    "description": "30GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_MSG_ReM_40GB": {
+    "name": "MSME Messenger 40GB",
+    "description": "40GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PROMO_YOUTH_OT_10GB": {
+    "name": "Youth Data Promo_10GB",
+    "description": "10 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PROMO_YOUTH_OT_20GB": {
+    "name": "Youth Data Promo_20GB",
+    "description": "20 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_OM_PREPAID_30GB": {
+    "name": "Meet Lite Prepaid",
+    "description": "30 GB",
+    "validityDays": 30
+  },
+  "P_VB_PRE_SMYT": {
+    "name": "SMYT Prepaid",
+    "description": "25 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_ENT_REM_100GB": {
+    "name": "Enterprise Pack Recurrent",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_U_PROYT_4HR": {
+    "name": "YouTube Perk 1",
+    "description": "Unlimited",
+    "validityDays": 1
+  },
+  "P_VB_U_PROYT_12HR": {
+    "name": "YouTube Perk 2",
+    "description": "Unlimited",
+    "validityDays": 1
+  },
+  "P_VB_U_PROYT_24HR": {
+    "name": "YouTube Perk 3",
+    "description": "Unlimited",
+    "validityDays": 1
+  },
+  "P_VB_Q_ADDON 5_OT": {
+    "name": "Onetime 5GB AddOn",
+    "description": "5 GB",
+    "validityDays": 1
+  },
+  "P_VB_Q_ADDON 10_OT": {
+    "name": "Onetime 10GB AddOn",
+    "description": "10 GB",
+    "validityDays": 1
+  },
+  "P_VB_Q_ADDON 25_OT": {
+    "name": "Onetime 25GB AddOn",
+    "description": "25 GB",
+    "validityDays": 1
+  },
+  "P_VB_Q_ADDON 40_OT": {
+    "name": "Onetime 40GB AddOn",
+    "description": "40 GB",
+    "validityDays": 1
+  },
+  "P_VB_Q_ADDON 100_OT": {
+    "name": "Onetime 100GB AddOn",
+    "description": "100 GB",
+    "validityDays": 1
+  },
+  "P_VB_Q_ADDON 200_OT": {
+    "name": "Onetime 200GB AddOn",
+    "description": "200 GB",
+    "validityDays": 1
+  },
+  "P_VB_Q_RE_BONUS 10GB": {
+    "name": "Bonus 10GB",
+    "description": "10GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PROMO_YOUTH_OT_50GB": {
+    "name": "Youth Data Promo_50GB",
+    "description": "50 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_YOUTH_RE_25GB": {
+    "name": "Trio Youth add-on",
+    "description": "25 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_UPLOAD_12GB": {
+    "name": "Upload 12GB",
+    "description": "12 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_UPLOAD_40GB": {
+    "name": "Upload 40GB",
+    "description": "40 GB",
+    "validityDays": 30
+  },
+  "P_VB_U_UPLOAD": {
+    "name": "Unlimited Upload",
+    "description": "Unlimited",
+    "validityDays": 30
+  },
+  "P_VB_Q_PR_YOUTH_OT_50GB_14D": {
+    "name": "Seasonal Offer Youth 50GB",
+    "description": "50 GB",
+    "validityDays": 14
+  },
+  "P_VB_Q_PR_YOUTH1_OT_25GB_7D": {
+    "name": "Valentine's Offer",
+    "description": "25 GB",
+    "validityDays": 7
+  },
+  "P_VB_Q_ENTEXP_OT_25GB": {
+    "name": "Awurudu Data Hamper",
+    "description": "25 GB",
+    "validityDays": 7
+  },
+  "P_VB_Q_PROMO_OT_100GB": {
+    "name": "Anytime Free 100GB",
+    "description": "100GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PR_YOUTH_RE_30GB": {
+    "name": "Youth bundle 30GB",
+    "description": "30GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_RE_BONUS_1": {
+    "name": "Bonus Data 1",
+    "description": "23GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_RE_BONUS_2": {
+    "name": "Bonus Data 2",
+    "description": "41GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_ENTEXP_OT_100GB": {
+    "name": "Ent. Express Offer",
+    "description": "100GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_BONUS_10GB_RE": {
+    "name": "Bonus Data 10GB",
+    "description": "10GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PROMO_YOUTH_RE_50GB": {
+    "name": "Youth Bundle 50GB",
+    "description": "50 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_YT_RE_50GB": {
+    "name": "TouTube Bundle 50GB",
+    "description": "50 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_BONUS 500GB": {
+    "name": "Bonus Data 500GB",
+    "description": "500 GB",
+    "validityDays": 366
+  },
+  "P_VB_Q_RE_BONUS 25GB": {
+    "name": "Bonus 25GB",
+    "description": "25GB",
+    "validityDays": 30
+  },
+  "P_VB_U_LTEPEO_Re30": {
+    "name": "LTE PEOTV Unlimited",
+    "description": "Unlimited",
+    "validityDays": 30
+  },
+  "P_VB_Q_PR_YOUTH_OT_25GB_7D": {
+    "name": "Valentine's Free Offer",
+    "description": "25 GB",
+    "validityDays": 7
+  },
+  "P_VB_Q_BONUS 2GB": {
+    "name": "Bonus Data 2GB",
+    "description": "2 GB",
+    "validityDays": 366
+  },
+  "P_VB_Q_YOUTH_25GB": {
+    "name": "Social Media Bundle",
+    "description": "25 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_YOUTH_100GB": {
+    "name": "Social Media Bundle",
+    "description": "100 GB",
+    "validityDays": 30
+  },
+  "P_VB_Q_PR_YOUTH_RE_10GB": {
+    "name": "Youth Bonus 10GB",
+    "description": "10GB",
+    "validityDays": 30
+  },
+  "Z_Happy_Day": {
+    "name": "New Year Promotion",
+    "description": "Unlimited",
+    "validityDays": 1
+  },
+  "P_VB_Q_ENTEXP_RE_25GB": {
+    "name": "Bonus ENTXP 25GB",
+    "description": "25GB",
+    "validityDays": 30
+  },
+  "P_VB_U_BONUS_30D": {
+    "name": "Unlimited_One Month",
+    "description": "Unlimited",
+    "validityDays": 30
+  },
+  "P_VB_U_BONUS_60D": {
+    "name": "Unlimited_Two Months",
+    "description": "Unlimited",
+    "validityDays": 60
+  },
+  "FLEXINET40": {
+    "name": "Flexi Net 40",
+    "description": "40GB",
+    "validityDays": 7
+  },
+  "FLEXINET100": {
+    "name": "Flexi Net 100",
+    "description": "100GB",
+    "validityDays": 30
+  },
+  "FLEXINET250": {
+    "name": "Flexi Net 250",
+    "description": "250GB",
+    "validityDays": 30
+  },
+  "FLEXINET500": {
+    "name": "Flexi Net 500",
+    "description": "500GB",
+    "validityDays": 30
+  },
+  "Unlimited_Day_Pass": {
+    "name": "Unlimited Day Pass",
+    "description": "Unlimited",
+    "validityDays": 1
+  },
+  "Unlimited_3Day_Pass": {
+    "name": "Unlimited 3-Day Pass",
+    "description": "Unlimited",
+    "validityDays": 3
+  },
+  "Unlimited_week_Pass": {
+    "name": "Unlimited Week Pass",
+    "description": "Unlimited",
+    "validityDays": 7
+  }
+}

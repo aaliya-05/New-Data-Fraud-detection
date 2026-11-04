@@ -92,11 +92,24 @@ class PackageRiskPoint(BaseModel):
     risk_level: Optional[str] = None
 
 
+class PackageUsagePoint(BaseModel):
+    """One subscriber / day / package row from the per-package dataset."""
+    session_date: date
+    package_name: str
+    sessions_per_day: Optional[int] = None
+    download_gb: float = 0
+    upload_gb: float = 0
+    total_usage_gb: float = 0
+    risk_score_0_100: Optional[float] = None
+    risk_level: Optional[str] = None
+
+
 class SubscriberDetailPoint(BaseModel):
     session_date: date
     total_input_gb: Optional[float]
     total_output_gb: Optional[float]
     total_duration_minutes: Optional[float] = None
+    average_session_duration_minutes: Optional[float] = None
     sessions_per_day: Optional[int] = None
     offer_name: Optional[str] = None
     package_risks: list[PackageRiskPoint] = []
@@ -122,6 +135,7 @@ class SubscriberDetail(BaseModel):
     offer_name: Optional[str]
     history_days: int
     history: list[SubscriberDetailPoint]
+    package_usage: list[PackageUsagePoint] = []
     # --- added by the merge ---
     latest_decision: Optional[str]
     latest_final_score: Optional[float]
@@ -226,7 +240,8 @@ class AnalyticsWindowsResponse(BaseModel):
 
 class CalendarDateInfo(BaseModel):
     date: date
-    record_count: int
+    record_count: int  # rows in subscribers_daily (0 when only the package dataset covers the date)
+    package_record_count: int = 0  # rows in the per-package dataset
 
 
 class CalendarDatesResponse(BaseModel):
