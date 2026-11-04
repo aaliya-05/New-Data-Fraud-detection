@@ -20,3 +20,24 @@ build/
 # OS files
 .DS_Store
 Thumbs.db
+
+# More environment / secrets
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+
+# Data files (subscriber-level usage data must never be committed)
+*.parquet
+
+# Logs
+*.log
+
+# Temporary deploy files (task definitions contain AWS account / role ARNs)
+deploy/.tmp_*
+.tmp_*
+
+# Internal cost / planning documents
+AWS_Cost_Estimate.docx
