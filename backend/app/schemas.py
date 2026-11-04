@@ -109,6 +109,7 @@ class SubscriberDetailPoint(BaseModel):
     total_input_gb: Optional[float]
     total_output_gb: Optional[float]
     total_duration_minutes: Optional[float] = None
+    average_session_duration_minutes: Optional[float] = None
     sessions_per_day: Optional[int] = None
     offer_name: Optional[str] = None
     package_risks: list[PackageRiskPoint] = []

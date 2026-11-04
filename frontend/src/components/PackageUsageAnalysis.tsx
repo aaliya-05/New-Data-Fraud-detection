@@ -1,7 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { Alert, Card, CardContent, Grid, MenuItem, TextField, Typography } from '@mui/material';
 import { KpiCard } from '@/components/KpiCard';
+import { axisTooltipFormatter, makeLabeler } from '@/utils/packageNames';
 import type { PackageUsagePoint, SubscriberDetailPoint } from '@/types';
 
 export const ALL_PACKAGES = '';
@@ -54,6 +55,14 @@ export function PackageUsageAnalysis({
     return { packages, attributed, unattributed, sessions };
   }, [history, usage]);
 
+  // Double-clicking a chart switches its package names between friendly names and raw codes.
+  const [rawBar, setRawBar] = useState(false);
+  const [rawTrend, setRawTrend] = useState(false);
+  const allCodes = stats.packages.map((p) => p.name);
+  const selectLabel = makeLabeler(allCodes);
+  const barLabel = makeLabeler(allCodes, rawBar);
+  const trendLabel = makeLabeler(allCodes, rawTrend);
+
   const dates = useMemo(() => [...new Set(usage.map((u) => u.session_date))].sort(), [usage]);
 
   const barOption = {
@@ -61,7 +70,7 @@ export function PackageUsageAnalysis({
     tooltip: {
       trigger: 'axis',
       axisPointer: { type: 'shadow' },
-      valueFormatter: (v: number) => `${v.toFixed(3)} GB`,
+      formatter: axisTooltipFormatter({ headerLabel: barLabel, unit: 'GB' }),
     },
     legend: { data: ['Download', 'Upload'] },
     grid: { left: 170, right: 24, top: 40, bottom: 30 },
@@ -70,7 +79,8 @@ export function PackageUsageAnalysis({
       type: 'category',
       inverse: true,
       data: stats.packages.map((p) => p.name),
-      axisLabel: { width: 150, overflow: 'truncate' },
+      axisLabel: { width: 150, overflow: 'truncate', formatter: barLabel },
+      triggerEvent: true,
     },
     series: [
       { name: 'Download', type: 'bar', stack: 'usage', data: stats.packages.map((p) => Number(p.download.toFixed(3))) },
@@ -80,8 +90,8 @@ export function PackageUsageAnalysis({
 
   const trendPackages = selected ? [selected] : stats.packages.slice(0, MAX_TREND_LINES).map((p) => p.name);
   const trendOption = {
-    tooltip: { trigger: 'axis', valueFormatter: (v: number) => `${v.toFixed(3)} GB` },
-    legend: { data: trendPackages, type: 'scroll' },
+    tooltip: { trigger: 'axis', formatter: axisTooltipFormatter({ seriesLabel: trendLabel, unit: 'GB' }) },
+    legend: { data: trendPackages, type: 'scroll', formatter: trendLabel },
     grid: { left: 60, right: 24, top: 50, bottom: 40 },
     xAxis: { type: 'category', data: dates },
     yAxis: { type: 'value', name: 'GB' },
@@ -151,7 +161,7 @@ export function PackageUsageAnalysis({
           <MenuItem value={ALL_PACKAGES}>All packages</MenuItem>
           {stats.packages.map((p) => (
             <MenuItem key={p.name} value={p.name}>
-              {p.name}
+              {selectLabel(p.name)}
             </MenuItem>
           ))}
         </TextField>
@@ -160,19 +170,31 @@ export function PackageUsageAnalysis({
           <Grid item xs={12} md={6}>
             <Typography variant="subtitle2" gutterBottom>
               Package-wise Data Consumption
+              <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                (double-click to {rawBar ? 'show names' : 'show codes'})
+              </Typography>
             </Typography>
             <ReactECharts
               option={barOption}
               style={{ height: Math.max(220, 90 + stats.packages.length * 36) }}
               notMerge
+              onEvents={{ dblclick: () => setRawBar((r) => !r) }}
             />
           </Grid>
           <Grid item xs={12} md={6}>
             <Typography variant="subtitle2" gutterBottom>
               Daily Package Usage Trend
               {!selected && stats.packages.length > MAX_TREND_LINES ? ` (top ${MAX_TREND_LINES} packages)` : ''}
+              <Typography component="span" variant="caption" color="text.secondary" sx={{ ml: 1 }}>
+                (double-click to {rawTrend ? 'show names' : 'show codes'})
+              </Typography>
             </Typography>
-            <ReactECharts option={trendOption} style={{ height: 320 }} notMerge />
+            <ReactECharts
+              option={trendOption}
+              style={{ height: 320 }}
+              notMerge
+              onEvents={{ dblclick: () => setRawTrend((r) => !r) }}
+            />
           </Grid>
         </Grid>
       </CardContent>

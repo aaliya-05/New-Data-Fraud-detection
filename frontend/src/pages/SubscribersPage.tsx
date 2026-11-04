@@ -24,7 +24,6 @@ import {
   TableRow,
   TextField,
   Toolbar,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import type { TransitionProps } from '@mui/material/transitions';
@@ -35,6 +34,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { DateRangeFilter } from '@/components/DateRangeFilter';
 import { DecisionBadge } from '@/components/DecisionBadge';
+import { PackageName } from '@/components/PackageName';
 import { ALL_PACKAGES, PackageUsageAnalysis } from '@/components/PackageUsageAnalysis';
 import { useSubscriberDetail, useSubscribers } from '@/hooks/useDashboard';
 import { downloadPdfReport } from '@/services/api';
@@ -132,6 +132,14 @@ export function SubscribersPage() {
   );
   const avgSessionsPerDay = historyChartData.length ? totalSessions / historyChartData.length : 0;
 
+  // Average session duration per day: mean of the daily average session durations (the dataset's own
+  // per-day value), over days that report one.
+  const avgSessionMinutesPerDay = useMemo(() => {
+    const days = historyChartData.filter((h) => h.average_session_duration_minutes != null);
+    if (days.length === 0) return null;
+    return days.reduce((sum, h) => sum + (h.average_session_duration_minutes ?? 0), 0) / days.length;
+  }, [historyChartData]);
+
   // Red package tags: use the real per-package risk when we have it for that date;
   // otherwise fall back to the subscriber's average risk on the days the package was active.
   const packageUsage = useMemo(() => detail?.package_usage ?? [], [detail]);
@@ -209,20 +217,22 @@ export function SubscribersPage() {
     tooltip: {
       trigger: 'axis',
       formatter: (params: { axisValue: string; value: number }[]) =>
-        `${params[0].axisValue}<br/>Duration: <b>${formatHoursMinutes(params[0].value)}</b>`,
+        `${params[0].axisValue}<br/>Avg session duration: <b>${formatHoursMinutes(params[0].value)}</b>`,
     },
     grid: { left: 80, right: 24, top: 30, bottom: 40 },
     xAxis: { type: 'category', data: historyChartData.map((h) => h.session_date) },
     yAxis: {
       type: 'value',
-      name: 'Hours',
+      name: 'Hours per session',
       axisLabel: { formatter: (v: number) => `${Math.round(v / 60).toLocaleString()} h` },
     },
     series: [
       {
-        name: 'Duration (min)',
+        name: 'Avg session duration (min)',
         type: 'bar',
-        data: historyChartData.map((h) => Number((h.total_duration_minutes ?? 0).toFixed(2))),
+        data: historyChartData.map((h) =>
+          h.average_session_duration_minutes == null ? null : Number(h.average_session_duration_minutes.toFixed(2))
+        ),
       },
     ],
   };
@@ -425,6 +435,7 @@ export function SubscribersPage() {
                   { label: 'Total sessions', value: totalSessions.toLocaleString() },
                   { label: 'Avg usage per session', value: `${(detail.average_session_usage_gb ?? 0).toFixed(2)} GB` },
                   { label: 'Avg session count per day', value: avgSessionsPerDay.toLocaleString(undefined, { maximumFractionDigits: 1 }) },
+                  { label: 'Avg session duration per day', value: avgSessionMinutesPerDay == null ? '—' : formatHoursMinutes(avgSessionMinutesPerDay) },
                   { label: 'Download', value: `${(detail.total_input_gb ?? 0).toFixed(2)} GB` },
                   { label: 'Upload', value: `${(detail.total_output_gb ?? 0).toFixed(2)} GB` },
                   { label: 'Available history days', value: detail.history_days },
@@ -462,20 +473,25 @@ export function SubscribersPage() {
                             const real = packageRiskByDate.get(row.date)?.get(p);
                             const isHigh = real ? real.level === 'HIGH' : fallbackHighRiskPackages.has(p);
                             return (
-                              <Tooltip key={p} title={real ? `Package risk ${real.score.toFixed(1)} (${real.level ?? 'n/a'})` : ''}>
-                                <Chip
-                                  label={real ? `${p} · ${real.score.toFixed(0)}` : p}
-                                  size="small"
-                                  variant={selectedPackage === p ? 'filled' : 'outlined'}
-                                  color={isHigh ? 'error' : 'primary'}
-                                  onClick={() => setSelectedPackage(p)}
-                                  sx={{
-                                    height: 'auto',
-                                    '& .MuiChip-label': { whiteSpace: 'normal', py: 0.5 },
-                                    ...(isHigh && { borderWidth: 2, fontWeight: 600 }),
-                                  }}
-                                />
-                              </Tooltip>
+                              <Chip
+                                key={p}
+                                label={
+                                  <PackageName
+                                    code={p}
+                                    suffix={real ? ` · ${real.score.toFixed(0)}` : ''}
+                                    tip={real ? `Package risk ${real.score.toFixed(1)} (${real.level ?? 'n/a'})` : undefined}
+                                  />
+                                }
+                                size="small"
+                                variant={selectedPackage === p ? 'filled' : 'outlined'}
+                                color={isHigh ? 'error' : 'primary'}
+                                onClick={() => setSelectedPackage(p)}
+                                sx={{
+                                  height: 'auto',
+                                  '& .MuiChip-label': { whiteSpace: 'normal', py: 0.5 },
+                                  ...(isHigh && { borderWidth: 2, fontWeight: 600 }),
+                                }}
+                              />
                             );
                           })}
                           {row.packages.length === 0 && <Typography variant="body2" color="text.secondary">—</Typography>}
@@ -505,7 +521,10 @@ export function SubscribersPage() {
               <Card variant="outlined">
                 <CardContent>
                   <Typography variant="subtitle2" gutterBottom>
-                    Duration by day (hours & minutes)
+                    Average session duration by day (hours & minutes)
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary" component="p" sx={{ mb: 1 }}>
+                    Average length of one session on that day.
                   </Typography>
                   <ReactECharts option={durationOption} style={{ height: 320 }} notMerge />
                 </CardContent>

@@ -230,6 +230,7 @@ def get_subscriber_detail(subscriber_id: str) -> SubscriberDetail:
                 total_input_gb=r["total_input_gb"],
                 total_output_gb=r["total_output_gb"],
                 total_duration_minutes=r["total_duration_minutes"],
+                average_session_duration_minutes=r["average_session_duration_minutes"],
                 sessions_per_day=r["sessions_per_day"],
                 offer_name=r["offer_name"],
                 package_risks=package_risks.get(r["session_date"], []),
