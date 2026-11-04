@@ -2,14 +2,15 @@ import { NavLink, Outlet } from 'react-router-dom';
 import {
   AppBar,
   Box,
-  Button,
   Chip,
   Drawer,
+  IconButton,
   List,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   Toolbar,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -20,9 +21,10 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useAuth } from '@/auth/AuthContext';
 import { DateRangeProvider } from '@/context/DateRangeContext';
-import logoMark from '@/assets/logo-mark.png';
+import sltLogo from '@/assets/slt-logo.png';
 
-const DRAWER_WIDTH = 220;
+const DRAWER_WIDTH = 260;
+const HEADER_HEIGHT = 88;
 
 const NAV_ITEMS = [
   { to: '/dashboard', label: 'Executive summary', icon: <DashboardIcon />, end: true },
@@ -47,20 +49,26 @@ export default function MainLayout() {
           borderColor: 'secondary.main',
         }}
       >
-        <Toolbar sx={{ gap: 2 }}>
-          <Box
-            component="img"
-            src={logoMark}
-            alt="FraudVision AI logo"
-            sx={{ height: 50, width: 'auto', display: 'block' }}
+        <Toolbar sx={{ gap: 2, minHeight: { xs: HEADER_HEIGHT, sm: HEADER_HEIGHT }, px: { xs: 2, sm: 3 } }}>
+          {/* Brand block, top left. The company logo goes in the <img> slot above the product name. */}
+          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 0.9 }}>
+            <Box component="img" src={sltLogo} alt="SLT Digital" sx={{ height: 36, width: 'auto', display: 'block' }} />
+            <Typography sx={{ fontWeight: 800, fontSize: 15, lineHeight: 1, color: 'primary.dark' }}>
+              FraudVision AI
+            </Typography>
+          </Box>
+          <Box sx={{ flexGrow: 1 }} />
+          <Chip
+            icon={<PersonIcon />}
+            label={user}
+            variant="outlined"
+            sx={{ borderRadius: 20, bgcolor: '#F8FAFC', borderColor: '#D6DFEA', fontWeight: 600 }}
           />
-          <Typography variant="h6" sx={{ flexGrow: 1, fontWeight: 700 }}>
-            FraudVision AI
-          </Typography>
-          <Chip icon={<PersonIcon />} label={user} size="small" variant="outlined" />
-          <Button color="inherit" size="small" startIcon={<LogoutIcon />} onClick={logout}>
-            Sign out
-          </Button>
+          <Tooltip title="Sign out">
+            <IconButton color="inherit" onClick={logout} aria-label="Sign out">
+              <LogoutIcon />
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </AppBar>
 
@@ -72,15 +80,28 @@ export default function MainLayout() {
           [`& .MuiDrawer-paper`]: { width: DRAWER_WIDTH, boxSizing: 'border-box' },
         }}
       >
-        <Toolbar />
-        <List>
+        <Toolbar sx={{ minHeight: { xs: HEADER_HEIGHT, sm: HEADER_HEIGHT } }} />
+        <List sx={{ px: 1.5, pt: 1.5 }}>
           {NAV_ITEMS.map((item) => (
             <ListItemButton
               key={item.to}
               component={NavLink}
               to={item.to}
               end={item.end}
-              sx={{ '&.active': { bgcolor: 'rgba(0,114,188,0.10)', color: 'primary.dark', borderLeft: '4px solid', borderColor: 'secondary.main' } }}
+              sx={{
+                borderRadius: 4,
+                mb: 0.5,
+                py: 1.25,
+                color: 'text.primary',
+                '& .MuiListItemIcon-root': { color: 'text.secondary', minWidth: 44 },
+                '& .MuiListItemText-primary': { fontWeight: 600, fontSize: 16 },
+                '&:hover': { bgcolor: 'rgba(0,114,188,0.06)' },
+                '&.active': {
+                  bgcolor: '#DCEAF8',
+                  color: 'primary.dark',
+                  '& .MuiListItemIcon-root': { color: 'primary.main' },
+                },
+              }}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.label} />
@@ -89,8 +110,8 @@ export default function MainLayout() {
         </List>
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3, width: `calc(100% - ${DRAWER_WIDTH}px)` }}>
-        <Toolbar />
+      <Box component="main" sx={{ flexGrow: 1, p: 4, width: `calc(100% - ${DRAWER_WIDTH}px)`, minWidth: 0 }}>
+        <Toolbar sx={{ minHeight: { xs: HEADER_HEIGHT, sm: HEADER_HEIGHT } }} />
         <DateRangeProvider>
           <Outlet />
         </DateRangeProvider>

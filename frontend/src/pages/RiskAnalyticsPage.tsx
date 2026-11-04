@@ -16,6 +16,7 @@ import { useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { PackageName } from '@/components/PackageName';
 import { DateRangeFilter } from '@/components/DateRangeFilter';
+import { PageHeader } from '@/components/PageHeader';
 import { usePackageRisk, usePackageStats, useRuleStatistics } from '@/hooks/useDashboard';
 import { useDateRange } from '@/context/DateRangeContext';
 import { makeLabeler } from '@/utils/packageNames';
@@ -80,6 +81,10 @@ export function RiskAnalyticsPage() {
 
   return (
     <Stack spacing={3}>
+      <PageHeader
+        title="Risk analytics"
+        subtitle="Rule triggers, package distribution and per-package risk."
+      />
       <DateRangeFilter value={range} onChange={setRange} />
 
       <Card variant="outlined">

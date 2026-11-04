@@ -70,3 +70,18 @@ export function axisTooltipFormatter(opts: {
     return `${opts.headerLabel ? opts.headerLabel(head) : head}<br/>${lines.join('<br/>')}`;
   };
 }
+
+/**
+ * Search patterns for a package search box. The text is matched against raw package codes, and
+ * also against friendly names, so typing "netflix" finds every code whose friendly name has it.
+ */
+export function packageSearchPatterns(text: string, maxCodes = 40): string[] {
+  const q = text.trim();
+  if (!q) return [];
+  const lower = q.toLowerCase();
+  const codes = Object.entries(ADDONS)
+    .filter(([, a]) => a.name.toLowerCase().includes(lower))
+    .map(([code]) => code)
+    .slice(0, maxCodes);
+  return [q, ...codes];
+}

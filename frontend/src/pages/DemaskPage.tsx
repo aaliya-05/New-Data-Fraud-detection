@@ -1,3 +1,4 @@
+import { PageHeader } from '@/components/PageHeader';
 import { useEffect, useState } from 'react';
 import type { AxiosProgressEvent } from 'axios';
 import {
@@ -203,13 +204,10 @@ export function DemaskPage() {
 
   return (
     <Stack spacing={3}>
-      <Box>
-        <Typography variant="h6">Demask</Typography>
-        <Typography variant="body2" color="text.secondary">
-          Batch-convert masked subscriber IDs back to originals, via a parquet mapping file or a
-          decryption provider.
-        </Typography>
-      </Box>
+      <PageHeader
+        title="Demask"
+        subtitle="Batch-convert masked subscriber IDs back to originals, via a parquet mapping file or a decryption provider."
+      />
 
       <Card variant="outlined">
         <CardContent>
