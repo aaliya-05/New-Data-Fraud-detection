@@ -17,16 +17,20 @@ export function KpiCard({
   return (
     <Card
       variant="outlined"
-      sx={{ height: '100%', ...(accent && { borderColor: accent, borderWidth: 2 }) }}
+      sx={{
+        height: '100%',
+        borderLeft: '4px solid',
+        borderLeftColor: accent ?? 'primary.main',
+      }}
     >
-      <CardContent>
+      <CardContent sx={{ py: 2.5, px: 3 }}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="body2" color="text.secondary">
             {label}
           </Typography>
           {icon}
         </Stack>
-        <Typography variant="h4" sx={{ mt: 1, fontWeight: 500, ...(accent && { color: accent }) }}>
+        <Typography variant="h4" sx={{ mt: 1, fontWeight: 800, color: accent ?? '#10243E' }}>
           {value}
         </Typography>
         {subtext && (

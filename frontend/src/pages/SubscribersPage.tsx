@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import {
   AppBar,
@@ -33,12 +33,14 @@ import CloseIcon from '@mui/icons-material/Close';
 import DownloadIcon from '@mui/icons-material/Download';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import { DateRangeFilter } from '@/components/DateRangeFilter';
+import { PageHeader } from '@/components/PageHeader';
 import { DecisionBadge } from '@/components/DecisionBadge';
 import { PackageName } from '@/components/PackageName';
 import { ALL_PACKAGES, PackageUsageAnalysis } from '@/components/PackageUsageAnalysis';
 import { useSubscriberDetail, useSubscribers } from '@/hooks/useDashboard';
-import { downloadPdfReport } from '@/services/api';
+import { downloadPdfReport, downloadSubscribersParquet } from '@/services/api';
 import { useDateRange } from '@/context/DateRangeContext';
+import { packageSearchPatterns } from '@/utils/packageNames';
 
 const FullScreenTransition = forwardRef(function FullScreenTransition(
   props: TransitionProps & { children: ReactElement },
@@ -90,6 +92,8 @@ function toCsv(rows: Record<string, unknown>[]): string {
 export function SubscribersPage() {
   const { range, setRange } = useDateRange();
   const [search, setSearch] = useState('');
+  const [packageText, setPackageText] = useState('');
+  const [packageQuery, setPackageQuery] = useState('');
   const [decision, setDecision] = useState('');
   const [minRisk, setMinRisk] = useState('');
   const [maxRisk, setMaxRisk] = useState('');
@@ -98,10 +102,21 @@ export function SubscribersPage() {
   const [selected, setSelected] = useState<string | null>(null);
   const [selectedPackage, setSelectedPackage] = useState(ALL_PACKAGES);
 
-  const { data, isLoading } = useSubscribers({
+  // Package search scans the per-day table, so wait for a pause in typing before querying.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setPackageQuery(packageText.trim());
+      setPage(0);
+    }, 500);
+    return () => clearTimeout(t);
+  }, [packageText]);
+  const packagePatterns = useMemo(() => packageSearchPatterns(packageQuery), [packageQuery]);
+
+  const { data, isLoading, isFetching } = useSubscribers({
     dateFrom: range.dateFrom,
     dateTo: range.dateTo,
     search: search || undefined,
+    package: packagePatterns.length ? packagePatterns : undefined,
     decision: decision || undefined,
     minRisk: minRisk === '' ? undefined : Number(minRisk),
     maxRisk: maxRisk === '' ? undefined : Number(maxRisk),
@@ -257,6 +272,8 @@ export function SubscribersPage() {
 
   return (
     <Stack spacing={2}>
+      <PageHeader title="Subscribers" subtitle="Search, assess and export subscriber risk records." />
+      <Paper variant="outlined" sx={{ p: 2.5 }}>
       <Stack direction="row" spacing={2} alignItems="center" flexWrap="wrap" useFlexGap>
         <DateRangeFilter value={range} onChange={setRange} />
         <TextField
@@ -264,6 +281,17 @@ export function SubscribersPage() {
           size="small"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+        />
+        <TextField
+          label="Search package"
+          size="small"
+          value={packageText}
+          onChange={(e) => setPackageText(e.target.value)}
+          helperText={
+            packageQuery && isFetching ? 'Searching packages…' : packageQuery && !range.dateFrom && !range.dateTo ? 'All dates' : undefined
+          }
+          // Floats under the field so it never changes the field's height / row alignment.
+          FormHelperTextProps={{ sx: { position: 'absolute', top: '100%', mt: 0.25, ml: 1.5, whiteSpace: 'nowrap' } }}
         />
         <TextField
           label="Decision"
@@ -303,6 +331,23 @@ export function SubscribersPage() {
           sx={{ width: 130 }}
         />
         <Box sx={{ flexGrow: 1 }} />
+        <Button
+          startIcon={<DownloadIcon />}
+          onClick={() =>
+            downloadSubscribersParquet({
+              dateFrom: range.dateFrom,
+              dateTo: range.dateTo,
+              search: search || undefined,
+              package: packagePatterns.length ? packagePatterns : undefined,
+              decision: decision || undefined,
+              minRisk: minRisk === '' ? undefined : Number(minRisk),
+              maxRisk: maxRisk === '' ? undefined : Number(maxRisk),
+            })
+          }
+          title="All rows matching the current filters, not just this page"
+        >
+          Download Parquet
+        </Button>
         <Button startIcon={<DownloadIcon />} onClick={handleExportCsv} disabled={!data?.items.length}>
           Download CSV
         </Button>
@@ -315,6 +360,7 @@ export function SubscribersPage() {
           Export PDF
         </Button>
       </Stack>
+      </Paper>
 
       <TableContainer component={Paper} variant="outlined">
         <Table size="small">

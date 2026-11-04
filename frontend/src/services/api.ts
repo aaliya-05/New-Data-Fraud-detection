@@ -54,10 +54,11 @@ api.interceptors.response.use(
   }
 );
 
-function buildParams(params: Record<string, string | number | boolean | null | undefined>) {
+function buildParams(params: Record<string, string | number | boolean | string[] | null | undefined>) {
   const p = new URLSearchParams();
   Object.entries(params).forEach(([k, v]) => {
-    if (v !== null && v !== undefined && v !== '') p.append(k, String(v));
+    if (Array.isArray(v)) v.forEach((item) => item !== '' && p.append(k, item));
+    else if (v !== null && v !== undefined && v !== '') p.append(k, String(v));
   });
   return p;
 }
@@ -134,6 +135,7 @@ export const fetchSubscribers = async (params: {
   dateFrom?: string | null;
   dateTo?: string | null;
   search?: string;
+  package?: string[];
   decision?: string;
   minRisk?: number;
   maxRisk?: number;
@@ -145,6 +147,7 @@ export const fetchSubscribers = async (params: {
       date_from: params.dateFrom,
       date_to: params.dateTo,
       search: params.search,
+      package: params.package,
       decision: params.decision,
       min_risk: params.minRisk,
       max_risk: params.maxRisk,
@@ -167,6 +170,28 @@ export const fetchSubscriberDetail = async (subscriberId: string): Promise<Subsc
 export const scoreSubscriber = async (payload: ScoreRequest): Promise<ScoreResponse> => {
   const { data } = await api.post('/api/score', payload);
   return data;
+};
+
+/** Download every subscriber row matching the current filters (not just the visible page) as parquet. */
+export const downloadSubscribersParquet = (params: {
+  dateFrom?: string | null;
+  dateTo?: string | null;
+  search?: string;
+  package?: string[];
+  decision?: string;
+  minRisk?: number;
+  maxRisk?: number;
+}): void => {
+  const p = buildParams({
+    date_from: params.dateFrom,
+    date_to: params.dateTo,
+    search: params.search,
+    package: params.package,
+    decision: params.decision,
+    min_risk: params.minRisk,
+    max_risk: params.maxRisk,
+  });
+  window.location.assign(`/api/export/subscribers.parquet?${p.toString()}`);
 };
 
 export const downloadPdfReport = (dateFrom: string, dateTo: string): void => {

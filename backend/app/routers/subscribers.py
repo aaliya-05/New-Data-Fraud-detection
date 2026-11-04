@@ -1,8 +1,10 @@
+import io
 from datetime import date as date_type
 from math import ceil
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Query
+import pandas as pd
+from fastapi import APIRouter, HTTPException, Query, Response
 from sqlalchemy import text
 
 from ..db import get_session
@@ -25,29 +27,30 @@ def _split_rules(value: Optional[str]) -> list[str]:
     return [r.strip() for r in value.split(",") if r.strip()]
 
 
-@router.get("/subscribers", response_model=SubscriberListResponse)
-def list_subscribers(
-    min_risk: float = Query(0, ge=0, le=100),
-    max_risk: float = Query(100, ge=0, le=100),
-    decision: Optional[str] = Query(None, description="Filter: ALLOW, REVIEW, or BLOCK"),
-    date: Optional[date_type] = Query(None, description="Deprecated: use date_from/date_to instead."),
-    date_from: Optional[date_type] = Query(None, description="Inclusive start date"),
-    date_to: Optional[date_type] = Query(None, description="Inclusive end date"),
-    search: Optional[str] = Query(None, description="Matches subscriber_id or account_num, partial"),
-    page: int = Query(1, ge=1),
-    page_size: int = Query(100, ge=1, le=500),
-) -> SubscriberListResponse:
-    offset = (page - 1) * page_size
-
+def _list_query_parts(
+    min_risk: float,
+    max_risk: float,
+    decision: Optional[str],
+    date: Optional[date_type],
+    date_from: Optional[date_type],
+    date_to: Optional[date_type],
+    search: Optional[str],
+    package: Optional[list[str]],
+) -> tuple[str, str, dict]:
+    """Shared by the list and the parquet export: base CTE, WHERE clause and bind params."""
     if date is not None:
         date_from = date_from or date
         date_to = date_to or date
 
-    if date_from is not None or date_to is not None:
+    patterns = [f"%{p.strip()}%" for p in (package or []) if p and p.strip()][:60]
+
+    if date_from is not None or date_to is not None or patterns:
         # history_days comes from the precomputed subscriber_summary
         # (app.ingest_core.refresh_subscriber_summary) instead of an
         # unconditional full-table GROUP BY that used to run on every
         # single request regardless of this date filter.
+        # A package filter also needs the per-day rows (offer_name lives there),
+        # so it uses this branch even when no dates are picked.
         base_cte = """
             SELECT s.subscriber_id, s.account_num, s.session_date, s.risk_score_0_100,
                    s.sessions_per_day, s.daily_usage_gb, s.rule_score, s.ml_score,
@@ -57,6 +60,8 @@ def list_subscribers(
             WHERE (:date_from IS NULL OR s.session_date >= :date_from)
               AND (:date_to IS NULL OR s.session_date <= :date_to)
         """
+        if patterns:
+            base_cte += "  AND s.offer_name ILIKE ANY(:package_patterns)"
     else:
         # subscriber_summary already holds exactly the latest-record view
         # (one row per subscriber), so no DISTINCT ON sort over the full
@@ -77,14 +82,35 @@ def list_subscribers(
         """
 
     where_clauses = ["risk_score_0_100 >= :min_risk", "risk_score_0_100 <= :max_risk"]
-    params = {"min_risk": min_risk, "max_risk": max_risk, "date_from": date_from, "date_to": date_to}
+    params: dict = {"min_risk": min_risk, "max_risk": max_risk, "date_from": date_from, "date_to": date_to}
+    if patterns:
+        params["package_patterns"] = patterns
     if search:
         where_clauses.append("(subscriber_id ILIKE :search OR account_num ILIKE :search)")
         params["search"] = f"%{search}%"
     if decision:
         where_clauses.append("decision = :decision")
         params["decision"] = decision.upper()
-    where_sql = " AND ".join(where_clauses)
+    return base_cte, " AND ".join(where_clauses), params
+
+
+@router.get("/subscribers", response_model=SubscriberListResponse)
+def list_subscribers(
+    min_risk: float = Query(0, ge=0, le=100),
+    max_risk: float = Query(100, ge=0, le=100),
+    decision: Optional[str] = Query(None, description="Filter: ALLOW, REVIEW, or BLOCK"),
+    date: Optional[date_type] = Query(None, description="Deprecated: use date_from/date_to instead."),
+    date_from: Optional[date_type] = Query(None, description="Inclusive start date"),
+    date_to: Optional[date_type] = Query(None, description="Inclusive end date"),
+    search: Optional[str] = Query(None, description="Matches subscriber_id or account_num, partial"),
+    package: Optional[list[str]] = Query(None, description="Package name(s), partial; repeat to match any"),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(100, ge=1, le=500),
+) -> SubscriberListResponse:
+    offset = (page - 1) * page_size
+    base_cte, where_sql, params = _list_query_parts(
+        min_risk, max_risk, decision, date, date_from, date_to, search, package
+    )
 
     count_sql = text(f"WITH base AS ({base_cte}) SELECT COUNT(*) FROM base WHERE {where_sql}")
 
@@ -96,9 +122,27 @@ def list_subscribers(
         LIMIT :limit OFFSET :offset
     """)
 
+    # A package search has to scan the per-day table, so count and fetch the page in a
+    # single pass (COUNT(*) OVER ()) instead of scanning it twice.
+    page_with_total_sql = text(f"""
+        WITH base AS ({base_cte}),
+        filtered AS (SELECT * FROM base WHERE {where_sql})
+        SELECT *, COUNT(*) OVER () AS total_rows FROM filtered
+        ORDER BY COALESCE(final_score, risk_score_0_100 / 100.0) DESC, subscriber_id ASC
+        LIMIT :limit OFFSET :offset
+    """)
+
     with get_session() as session:
-        total = session.execute(count_sql, params).scalar_one()
-        rows = session.execute(page_sql, {**params, "limit": page_size, "offset": offset}).mappings().all()
+        if "package_patterns" in params:
+            rows = session.execute(page_with_total_sql, {**params, "limit": page_size, "offset": offset}).mappings().all()
+            if rows:
+                total = rows[0]["total_rows"]
+            else:
+                # empty page: either no matches at all, or a page past the end
+                total = session.execute(count_sql, params).scalar_one() if offset else 0
+        else:
+            total = session.execute(count_sql, params).scalar_one()
+            rows = session.execute(page_sql, {**params, "limit": page_size, "offset": offset}).mappings().all()
 
     items = [
         SubscriberRow(
@@ -121,6 +165,49 @@ def list_subscribers(
 
     return SubscriberListResponse(
         items=items, total=total, page=page, page_size=page_size, total_pages=max(1, ceil(total / page_size))
+    )
+
+
+EXPORT_MAX_ROWS = 1_000_000
+
+
+@router.get("/export/subscribers.parquet")
+def export_subscribers_parquet(
+    min_risk: float = Query(0, ge=0, le=100),
+    max_risk: float = Query(100, ge=0, le=100),
+    decision: Optional[str] = Query(None),
+    date_from: Optional[date_type] = Query(None),
+    date_to: Optional[date_type] = Query(None),
+    search: Optional[str] = Query(None),
+    package: Optional[list[str]] = Query(None),
+) -> Response:
+    """All subscriber rows matching the same filters as the list (no paging), as parquet."""
+    base_cte, where_sql, params = _list_query_parts(
+        min_risk, max_risk, decision, None, date_from, date_to, search, package
+    )
+    sql = text(f"""
+        WITH base AS ({base_cte})
+        SELECT subscriber_id, account_num, session_date, risk_score_0_100, sessions_per_day,
+               daily_usage_gb, rule_score, ml_score, final_score, decision, triggered_rules, history_days
+        FROM base WHERE {where_sql}
+        ORDER BY COALESCE(final_score, risk_score_0_100 / 100.0) DESC, subscriber_id ASC
+        LIMIT :limit
+    """)
+    with get_session() as session:
+        rows = session.execute(sql, {**params, "limit": EXPORT_MAX_ROWS}).mappings().all()
+
+    df = pd.DataFrame([dict(r) for r in rows])
+    buf = io.BytesIO()
+    df.to_parquet(buf, index=False)
+    stamp = date_type.today().isoformat()
+    return Response(
+        content=buf.getvalue(),
+        media_type="application/octet-stream",
+        headers={
+            "Content-Disposition": f'attachment; filename="subscribers_{stamp}.parquet"',
+            "X-Row-Count": str(len(df)),
+            "X-Truncated": "true" if len(df) >= EXPORT_MAX_ROWS else "false",
+        },
     )
 
 

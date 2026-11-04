@@ -70,6 +70,7 @@ export function useSubscribers(params: {
   dateFrom?: string | null;
   dateTo?: string | null;
   search?: string;
+  package?: string[];
   decision?: string;
   minRisk?: number;
   maxRisk?: number;

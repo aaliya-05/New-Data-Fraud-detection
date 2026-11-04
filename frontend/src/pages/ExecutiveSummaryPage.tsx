@@ -2,6 +2,7 @@ import { Card, CardContent, Grid, Stack, Typography } from '@mui/material';
 import ReactECharts from 'echarts-for-react';
 import { DateRangeFilter } from '@/components/DateRangeFilter';
 import { KpiCard } from '@/components/KpiCard';
+import { PageHeader } from '@/components/PageHeader';
 import { useAnalyticsWindows, useDailyTrend, useKpis } from '@/hooks/useDashboard';
 import { useDateRange } from '@/context/DateRangeContext';
 
@@ -43,6 +44,10 @@ export function ExecutiveSummaryPage() {
 
   return (
     <Stack spacing={3}>
+      <PageHeader
+        title="Executive summary"
+        subtitle="Fraud risk, subscriber activity and decision trends at a glance."
+      />
       <DateRangeFilter value={range} onChange={setRange} />
 
       <Grid container spacing={2}>
